@@ -1,6 +1,6 @@
 FROM node:latest
 WORKDIR /usr/app
-COPY /home/kumarsp2/dockerfiles/mysite/package.json .
+COPY ./mysite/package.json .
 RUN npm install 
-COPY /home/kumarsp2/dockerfiles/mysite/ .
+COPY ./mysite/ .
 EXPOSE 8081
