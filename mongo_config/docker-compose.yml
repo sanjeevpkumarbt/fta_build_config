@@ -1,0 +1,7 @@
+version: "2"
+services:
+  mongo:
+    image: mongo
+    restart: always
+    volumes:
+      - /data/dev01:/data/db
