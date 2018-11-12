@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: mongodb
+spec:
+  containers:
+  - name: mongodb
+    image: registry.au-syd.bluemix.net/kumarsp/mongo:1.0
+    volumeMounts:
+    - name: mongo-storage
+      mountPath: /data/db
+  - name: nodejs
+    image: registry.au-syd.bluemix.net/kumarsp/node:1.0
+  
+  volumes:
+  - name: mongo-storage
+    emptyDir: {}

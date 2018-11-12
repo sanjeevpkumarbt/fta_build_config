@@ -1,0 +1,68 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: mongodb-server
+spec:
+  type: ClusterIP
+  ports:
+  - name: mongodb
+    port: 27017
+    protocol: TCP
+    targetPort: 27017
+  selector:
+    app: mongodb
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nodejs-server
+spec:
+  type: NodePort 
+  ports:
+  - name: node 
+    port: 8081 
+    protocol: TCP
+    targetPort: 8081 
+  selector:
+    app: nodejs
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: mongodb
+  labels:
+    app: mongodb
+spec:
+  containers:
+  - name: mongodb
+    image: registry.au-syd.bluemix.net/kumarsp/mongo:1.1
+    args: ["--sslMode","requireSSL","--sslPEMKeyFile","/keys/mongodb.pem","--sslCAFile","/keys/caroot.cer","--bind_ip_all"]
+    ports:
+      - containerPort: 27017
+    volumeMounts:
+    - name: mongo-storage
+      mountPath: /data/db
+  
+  volumes:
+  - name: mongo-storage
+    emptyDir: {}
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nodejs
+  labels:
+    app: nodejs
+spec:
+  containers:
+  - name: nodejs
+    image: registry.au-syd.bluemix.net/kumarsp/node:1.2
+    env:
+    - name: DBSERVER
+      value: "mongodb-server"
+    - name: KEYS
+      value: "/keys"
+    workingDir: /usr/app
+    command: ["npm"]
+    args: ["start"]
+

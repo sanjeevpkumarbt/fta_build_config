@@ -1,7 +1,7 @@
 version: "2"
 services:
   node:
-    build: ./web/
+    build: .
     user: "node"
     working_dir: /usr/app
     environment:
@@ -16,18 +16,20 @@ services:
       - mongo
     links:
       - mongo
+    volumes:
+      - /home/kumarsp2/keys/container_keys/node:/keys
     networks:
       mynetwork:
         aliases:
           - node.trznt.com
 
   mongo:
-    build: ./db/
     image: mongo
     command: --sslMode requireSSL --sslPEMKeyFile /keys/mongodb.pem --sslCAFile /keys/caroot.cer
     restart: always
     volumes:
       - /data/dev01:/data/db
+      - /home/kumarsp2/keys/container_keys/db:/keys
     networks:
       mynetwork:
         aliases:
