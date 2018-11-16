@@ -47,36 +47,22 @@ spec:
   - name: mongo-storage
     emptyDir: {}
 ---
-apiVersion: apps/v1
-kind: Deployment
+apiVersion: v1
+kind: Pod
 metadata:
   name: nodejs
   labels:
     app: nodejs
 spec:
-  replicas: 3
-  selector:
-    matchLabels:
-      tier: backend
-    matchExpressions:
-     - {key: tier, operator: In, values: [backend]}
-  template:
-    metadata:
-      labels:
-        app: nodejs
-        tier: backend
-    spec:
-      containers:
-        - name: nodejs
-          image: registry.au-syd.bluemix.net/kumarsp/node:1.6
-          env:
-            - name: DBSERVER
-              value: "mongodb-server"
-            - name: KEYS
-              value: "/keys"
-          workingDir: /usr/app
-          command: ["npm"]
-          args: ["start"]
-          ports:
-          - containerPort: 8081
+  containers:
+  - name: nodejs
+    image: registry.au-syd.bluemix.net/kumarsp/node:1.6
+    env:
+    - name: DBSERVER
+      value: "mongodb-server"
+    - name: KEYS
+      value: "/keys"
+    workingDir: /usr/app
+    command: ["npm"]
+    args: ["start"]
 
